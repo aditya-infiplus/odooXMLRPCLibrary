@@ -18,6 +18,6 @@ setup(
     author='Aditya Irri',
     author_email='adityairri@gmail.com',
     description='OdooXMLRPCLibrary is a Python library that simplifies interaction with the Odoo ERP system using XML-RPC API. With modules like create_order and create_contact, it provides an easy-to-use interface for managing rental orders and contacts in the Odoo platform. Whether youre integrating Odoo functionality into your application or automating business processes, OdooXMLRPCLibrary streamlines the communication process, making it efficient and developer-friendly.',
-    url='https://github.com/yourusername/OdooXMLRPCLibrary',
+    url='https://github.com/aditya-infiplus/odooXMLRPCLibrary.git',
     license='MIT',
 )
