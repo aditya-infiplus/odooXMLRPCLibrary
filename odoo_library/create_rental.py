@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import xmlrpc.client
 
-class createRentalLibrary:
+class CreateRentalLibrary:
     def __init__(self):
         self.app = Flask(__name__)
         self.app.route('/create_rental_order', methods=['POST'])(self.create_rental_order)
@@ -47,5 +47,5 @@ class createRentalLibrary:
 
         return jsonify({'order_id': order_id})
 
-    def run(self, host='0.0.0.0', port=5001, debug=True):
+    def run(self, host='0.0.0.0', port=5000, debug=True):
         self.app.run(host=host, port=port, debug=debug)
