@@ -7,8 +7,7 @@ class CreateContactLibrary:
         self.app = app or Flask(__name__)
         self.app.route('/create_contact', methods=['POST'])(self.create_contact)
 
-    def create_contact(self):
-        data = request.get_json()
+    def create_contact(self, data):
         # Odoo XML-RPC API configuration
         odoo_url = data.get('odoo_server_url')  # Mandatory
         database = data.get('database_name')  # Mandatory
@@ -125,7 +124,8 @@ class CreateContactLibrary:
         createContact = models.execute_kw(database, uid, password, 'res.partner', 'create', [contactObj])
 
         return jsonify({'contact_id': createContact})
-
-    def run(self, host='0.0.0.0', port=5000, debug=True):
-        self.app.run(host=host, port=port, debug=debug)
-
+    
+    def run(self, run_server=False):
+        # Run the Flask app only if explicitly requested
+        if run_server:
+            self.app.run()

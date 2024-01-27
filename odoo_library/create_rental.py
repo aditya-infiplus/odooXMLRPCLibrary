@@ -47,5 +47,6 @@ class CreateRentalLibrary:
 
         return jsonify({'order_id': order_id})
 
-    def run(self, host='0.0.0.0', port=5000, debug=True):
-        self.app.run(host=host, port=port, debug=debug)
+    def run(self):
+        # Run the Flask app
+        self.app.run()
