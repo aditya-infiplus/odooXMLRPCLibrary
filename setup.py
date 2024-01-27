@@ -2,17 +2,17 @@ from setuptools import setup, find_packages
 
 setup(
     name='OdooXMLRPCLibrary',
-    version='0.1.0',
+    version='0.1.1',
     packages=find_packages(),
     install_requires=[
         'Flask',
-        'xmlrpc',
+        # 'xmlrpc.client',  # Corrected import for xmlrpc.client
         # Add any other dependencies here
     ],
     entry_points={
         'console_scripts': [
-            'odoo_library = odoo_library.create_order:main',
-            'create_contact = odoo_library.create_contact:main',
+            'create_contact = OdooXMLRPCLibrary.create_contact:main',
+            'create_rental = OdooXMLRPCLibrary.create_rental:main',
         ],
     },
     author='Aditya Irri',
