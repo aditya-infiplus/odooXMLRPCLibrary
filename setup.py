@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='OdooXMLRPCLibrary',
-    version='0.3.1',
+    version='0.3.2',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -28,6 +28,7 @@ OdooXMLRPCLibrary is a Python library that simplifies interaction with the Odoo 
 ## Features
 
 - Add and Manage contacts in the Odoo platform.
+- Add Sales Order in the Odoo platform.
 
 ## Installation
 
@@ -93,26 +94,26 @@ return (response)
 
 # Example code to create a Sale Order
 data = {
-    "odoo_server_url": "https://aquaexchange-20240123-umsh.odoo.com/",   # Replace with your Odoo Server URL
-    "database_name": "aquaexchange-20240123-umsh",                       # Replace with your Database Name
-    "odoo_username": "pavan@aquaexchange.com",                           # Replace with your Odoo Username
-    "odoo_password": "AXOdoo@456",                                       # Replace with your Odoo Password
-    "name": "",                                                          # Leave it blank as we will generate automatically
-    "customerNumber": "6309528941",                                      # Customer's phone number / customer id in your system
-    "customerId": "",                                                    # Customer Id from Contacts API
-    "resellerNumber": "6309528941",                                      # Reseller Number (Only required if you are creating an OpenERP account)
-    "resellerId": "",                                                    # Reseller Id from Accounts API
-    "gst_treatment": "",                                                 # GST Treatment if any ("registered" or "unregister
-    "expirationDate": "",                                                # Expiry Date in YYYY-MM-DD format
-    "quotationDate": "",                                                 # Quotation Date in format YYYY-MM-DD
-    "pricelist": "Public Pricelist (INR)",                               # Price List Name
-    "orderLine_productNames": ["Vannastar 2P","Vannastar 2P"],           # Product Names for which you want to raise order lines
-    "orderLine_productId": [],                                           # Product Id's for which you want to raise an order
-    "orderLine_description": [],                                         # Array of order lines description
-    "orderLine_quantity":[3],                                            # Quantity for each product in orderline[] 
-    "orderLine_unitPrice":[],                                            # Unit price for each product in orderline[] format
-    "orderLine_taxes": [],                                               # Taxes for each order Line
-    "orderLine_discount": []                                             # Discounts for each order Line
+    "odoo_server_url": "https://exampledb.odoo.com/",   # Your Odoo server URL here (with http or https)
+    "database_name": "exampledb",                       # The database name on your Odoo Server 
+    "odoo_username": "DB Username",                     # The username for your Odoo Database
+    "odoo_password": "DB Password",                     # The password for your Odoo Database user
+    "name": "",                                         # Leave it blank as we will generate automatically
+    "customerNumber": "",                               # Customer's phone number / customer id in your system
+    "customerId": "",                                   # Customer Id from Contacts API
+    "resellerNumber": "",                               # Reseller Number (Only required if you are creating an OpenERP account)
+    "resellerId": "",                                   # Reseller Id from Accounts API
+    "gst_treatment": "",                                # GST Treatment if any ("registered" or "unregister
+    "expirationDate": "",                               # Expiry Date in YYYY-MM-DD format
+    "quotationDate": "",                                # Quotation Date in format YYYY-MM-DD
+    "pricelist": "",                                    # Price List Name
+    "orderLine_productNames": ["",""],                  # Product Names for which you want to raise order lines (array of string)
+    "orderLine_productId": [],                          # Product Id's for which you want to raise an order (array of numbers)
+    "orderLine_description": [],                        # Array of order lines description (array of string)
+    "orderLine_quantity":[],                            # Quantity for each product in orderline[] (array of float)
+    "orderLine_unitPrice":[],                           # Unit price for each product in orderline[] format (array of float)
+    "orderLine_taxes": [],                              # Taxes for each order Line (array of float)
+    "orderLine_discount": []                            # Discounts for each order Line (array of float)
 }
 
 response = create_sale_order_instance.create_sale_order(data)
