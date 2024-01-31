@@ -4,10 +4,11 @@ OdooXMLRPCLibrary is a Python library that simplifies interaction with the Odoo 
 
 ## Features
 
-  *res.partner* Model
+*res.partner* Model
 - Add a new contact in the Odoo platform.
+- Get Contact Details by Phone Number or Name.
 
-  *sale.order* Model
+*sale.order* Model
 - Add Sales Order in the Odoo platform.
 - Get Sales Order Data by Order ID.
 
@@ -27,19 +28,19 @@ pip install OdooXMLRPCLibrary
 ```python
 from odoo_library.res_partner import ResPartnerModel
 from odoo_library.sale_order import SaleOrderModel
-
-# Create instances of the libraries
-res_partner_model_instance = ResPartnerModel()
-sale_order_model_instance = SaleOrderModel()
-
-# Run the Flask apps
-res_partner_model_instance.run()
-sale_order_model_instance.run()
 ```
 
 **Code Usage**
 ```python
-# Example code to create a Contact
+# -------------------------- Example code to create a Contact --------------------------
+
+# Create instances of the libraries
+res_partner_model_instance = ResPartnerModel()
+
+# Run the Instance
+res_partner_model_instance.run()
+
+# Prepare Data
 data = {
     "odoo_server_url": "https://exampledb.odoo.com/",   # Your Odoo server URL here (with http or https)
     "database_name": "exampledb",                       # The database name on your Odoo Server 
@@ -66,7 +67,38 @@ data = {
     "tags": ""                                          # Tags (Comma separated list, Optional)
 }
 
+# Send data to the function
 response = res_partner_model_instance.create_contact(data)
+
+#Get Response
+return (response)
+
+
+
+
+# -------------------------- Example code to Get Contact Data --------------------------
+
+# Create instances of the libraries
+res_partner_model_instance = ResPartnerModel()
+
+# Run the Instance
+res_partner_model_instance.run()
+
+# Prepare Data
+# Can use either 'name' or 'phone' to get the contact details 
+data = {
+    "odoo_server_url": "https://exampledb.odoo.com/",   # Your Odoo server URL here (with http or https)
+    "database_name": "exampledb",                       # The database name on your Odoo Server 
+    "odoo_username": "DB Username",                     # The username for your Odoo Database
+    "odoo_password": "DB Password",                     # The password for your Odoo Database user
+    "name": "",                                         # Name of contact person (Optional)
+    "phone": ""                                         # Phone number of contact person (Optional)
+}
+
+# Send data to the function
+response = res_partner_model_instance.get_contact_data(data)
+
+#Get Response
 return (response)
 
 
@@ -75,7 +107,15 @@ return (response)
 
 
 
-# Example code to create a Sale Order
+# -------------------------- Example code to create a Sale Order  --------------------------
+
+# Create instances of the libraries
+sale_order_model_instance = SaleOrderModel()
+
+# Run the Instance
+sale_order_model_instance.run()
+
+# Prepare Data
 data = {
     "odoo_server_url": "https://exampledb.odoo.com/",   # Your Odoo server URL here (with http or https)
     "database_name": "exampledb",                       # The database name on your Odoo Server 
@@ -99,13 +139,24 @@ data = {
     "orderLine_discount": []                            # Discounts for each order Line (array of float)
 }
 
+# Send data to the function
 response = sale_order_model_instance.create_sale_order(data)
+
+#Get Response
 return (response)
 
 
 
 
-# Example code to get Sales Order Data
+# -------------------------- Example code to get Sales Order Data --------------------------
+
+# Create instances of the libraries
+sale_order_model_instance = SaleOrderModel()
+
+# Run the Instance
+sale_order_model_instance.run()
+
+# Prepare Data
 data = {
     "odoo_server_url": "https://exampledb.odoo.com/",   # Your Odoo server URL here (with http or https)
     "database_name": "exampledb",                       # The database name on your Odoo Server 
@@ -114,7 +165,10 @@ data = {
     "orderID": "",                                      # The sales order ID you want to retrieve data for
 }
 
+# Send data to the function
 response = sale_order_model_instance.get_sale_order_data(data)
+
+#Get Response
 return (response)
 ```
 

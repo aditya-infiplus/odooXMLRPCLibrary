@@ -2,27 +2,32 @@ from flask import Flask, request, jsonify
 import xmlrpc.client
 
 class ResPartnerModel:
-    def __init__(self, app=None):
+    def __init__(self):
         # Allow passing an external Flask app instance or create a new one
-        self.app = app or Flask(__name__)
-        self.app.route('/create_contact', methods=['POST'])(self.create_contact)
+        self.app = Flask(__name__)
+        self.register_routes()
 
-    def create_contact(self, data):
-        # Odoo XML-RPC API configuration
-        odoo_url = data.get('odoo_server_url')  # Mandatory
-        database = data.get('database_name')  # Mandatory
-        username = data.get('odoo_username')  # Mandatory
-        password = data.get('odoo_password')  # Mandatory
-        # Check if Odoo XML-RPC configuration data is given
+    def register_routes(self):
+        self.app.route('/create_contact', methods=['POST'])(self.create_contact)
+        self.app.route('/get_sale_order_data', methods=['POST'])(self.get_sale_order_data)
+
+    def connect_to_odoo(self, data):
+        odoo_url = data.get('odoo_server_url')
+        database = data.get('database_name')
+        username = data.get('odoo_username')
+        password = data.get('odoo_password')
+
         if not all([odoo_url, database, username, password]):
-            # If any of the required data is missing, return an error
             return jsonify({'error': 'Missing Odoo XML-RPC configuration data'}), 400
 
-        # Make Odoo XML-RPC Connection
         common = xmlrpc.client.ServerProxy(f'{odoo_url}/xmlrpc/2/common')
         uid = common.authenticate(database, username, password, {})
         models = xmlrpc.client.ServerProxy(f'{odoo_url}/xmlrpc/2/object')
 
+        return models, uid, database, password
+    
+    def create_contact(self, data):
+        models, uid, database, password = self.connect_to_odoo(data)
         # Initialize Variables
         country_name = None
         country_id = None
@@ -125,6 +130,35 @@ class ResPartnerModel:
 
         return jsonify({'contact_id': createContact})
     
+    def get_contact_data(self, data):
+        models, uid, database, password = self.connect_to_odoo(data)
+
+        try:
+            phone = data.get('phone')
+            name = data.get('name')
+
+            if not phone and not name:
+                return jsonify({'error': 'Missing phone and name in the request'}), 400
+
+            # Fetch contact data
+            search_domain = []
+            if name:
+                search_domain.append(["name", "=", name])
+            if phone:
+                search_domain.append(['|', ["phone", "=", phone], ["mobile", "=", phone]])
+
+            contact_data = models.execute_kw(database, uid, password, 'res.partner', 'search_read', [search_domain])
+
+            if not contact_data:
+                if name and not phone:
+                    return jsonify({'error': f'Contact with Name: {name} not found'}), 404
+                elif phone and not name:
+                    return jsonify({'error': f'Contact with Phone: {phone} not found'}), 404
+
+            return jsonify({'contact_data': contact_data})
+
+        except xmlrpc.client.Fault as e:
+            return jsonify({'error': f'Error fetching contact data - {str(e)}'}), 500
     def run(self, run_server=False):
         # Run the Flask app only if explicitly requested
         if run_server:
