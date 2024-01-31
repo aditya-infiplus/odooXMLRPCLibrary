@@ -9,23 +9,24 @@ class SaleOrderModel:
 
     def register_routes(self):
         self.app.route('/create_sale_order', methods=['POST'])(self.create_sale_order)
+        self.app.route('/get_sale_order_data', methods=['POST'])(self.get_sale_order_data)
 
-    def create_sale_order(self, data):
-        # Odoo XML-RPC API configuration
-        odoo_url = data.get('odoo_server_url')  # Mandatory
-        database = data.get('database_name')    # Mandatory
-        username = data.get('odoo_username')    # Mandatory
-        password = data.get('odoo_password')    # Mandatory
+    def connect_to_odoo(self, data):
+        odoo_url = data.get('odoo_server_url')
+        database = data.get('database_name')
+        username = data.get('odoo_username')
+        password = data.get('odoo_password')
 
-        # Check if Odoo XML-RPC configuration data is given
         if not all([odoo_url, database, username, password]):
-            # If any of the required data is missing, return an error
             return jsonify({'error': 'Missing Odoo XML-RPC configuration data'}), 400
 
-        # Make Odoo XML-RPC Connection
         common = xmlrpc.client.ServerProxy(f'{odoo_url}/xmlrpc/2/common')
         uid = common.authenticate(database, username, password, {})
         models = xmlrpc.client.ServerProxy(f'{odoo_url}/xmlrpc/2/object')
+
+        return models, uid, database, password
+    def create_sale_order(self, data):
+        models, uid, database, password = self.connect_to_odoo(data)
 
         try:
             partnerId = data.get('customerId') or models.execute_kw(database, uid, password, 'res.partner', 'search',
@@ -96,6 +97,25 @@ class SaleOrderModel:
         createSalesOrder = models.execute_kw(database, uid, password, 'sale.order', 'create', [saleObj])
 
         return jsonify({'sale_order_id': createSalesOrder})
+
+    def get_sale_order_data(self, data):
+        models, uid, database, password = self.connect_to_odoo(data)
+        try:
+            order_id = data.get('orderID')
+            if not order_id:
+                return jsonify({'error': 'Missing orderID in the request'}), 400
+
+            # Fetch sales order data
+            sale_order_data = models.execute_kw(database, uid, password, 'sale.order', 'search_read', [[["name", "=", order_id]]])
+
+            if not sale_order_data:
+                return jsonify({'error': f'Sale order with ID {order_id} not found'}), 404
+
+            # You can process the sale_order_data as needed
+            return jsonify({'sale_order_data': sale_order_data})
+
+        except xmlrpc.client.Fault:
+            return jsonify({'error': 'Error fetching sale order data'}), 500
 
     def run(self, run_server=False):
         # Run the Flask app only if explicitly requested

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='OdooXMLRPCLibrary',
-    version='0.3.4',
+    version='0.3.5',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -13,7 +13,8 @@ setup(
     entry_points={
         'console_scripts': [
             'create_contact = OdooXMLRPCLibrary.ResPartnerModel:main',
-            'create_sale_order = OdooXMLRPCLibrary.SaleOrderModel:main',
+            'create_sale_order = OdooXMLRPCLibrary.SaleOrderModel:create_sale_order',
+            'get_sale_order_data = OdooXMLRPCLibrary.SaleOrderModel:get_sale_order_data',
         ],
     },
     author='Aditya Irri',
@@ -23,12 +24,18 @@ setup(
     long_description='''
     # OdooXMLRPCLibrary
 
-OdooXMLRPCLibrary is a Python library that simplifies interaction with the Odoo ERP system using the XML-RPC API. It provides modules for creating contacts, Creating Sales Order in the Odoo platform.
+OdooXMLRPCLibrary is a Python library that simplifies interaction with the Odoo ERP system using the XML-RPC API. It provides modules for Creating contacts, Creating Sales Order in the Odoo platform.
 
 ## Features
 
-- Add and Manage contacts in the Odoo platform.
+  *res.partner* Model
+- Add a new contact in the Odoo platform.
+
+  *sale.order* Model
 - Add Sales Order in the Odoo platform.
+- Get Sales Order Data by Order ID.
+
+*More Modules and Features Coming Soon*
 
 ## Installation
 
@@ -117,6 +124,21 @@ data = {
 }
 
 response = sale_order_model_instance.create_sale_order(data)
+return (response)
+
+
+
+
+# Example code to get Sales Order Data
+data = {
+    "odoo_server_url": "https://exampledb.odoo.com/",   # Your Odoo server URL here (with http or https)
+    "database_name": "exampledb",                       # The database name on your Odoo Server 
+    "odoo_username": "DB Username",                     # The username for your Odoo Database
+    "odoo_password": "DB Password",                     # The password for your Odoo Database user
+    "orderID": "",                                      # The sales order ID you want to retrieve data for
+}
+
+response = sale_order_model_instance.get_sale_order_data(data)
 return (response)
 ```
 
