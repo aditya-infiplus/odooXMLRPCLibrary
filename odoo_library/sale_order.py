@@ -5,14 +5,17 @@ class SaleOrderModel:
     def __init__(self):
         # Allow passing an external Flask app instance or create a new one
         self.app = Flask(__name__)
+        self.register_routes()
+
+    def register_routes(self):
         self.app.route('/create_sale_order', methods=['POST'])(self.create_sale_order)
 
     def create_sale_order(self, data):
         # Odoo XML-RPC API configuration
         odoo_url = data.get('odoo_server_url')  # Mandatory
-        database = data.get('database_name')  # Mandatory
-        username = data.get('odoo_username')  # Mandatory
-        password = data.get('odoo_password')  # Mandatory
+        database = data.get('database_name')    # Mandatory
+        username = data.get('odoo_username')    # Mandatory
+        password = data.get('odoo_password')    # Mandatory
 
         # Check if Odoo XML-RPC configuration data is given
         if not all([odoo_url, database, username, password]):

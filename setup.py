@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='OdooXMLRPCLibrary',
-    version='0.3.2',
+    version='0.3.4',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -12,8 +12,8 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'create_contact = OdooXMLRPCLibrary.create_contact:main',
-            'create_sale_order = OdooXMLRPCLibrary.saleOrderModel:main',
+            'create_contact = OdooXMLRPCLibrary.ResPartnerModel:main',
+            'create_sale_order = OdooXMLRPCLibrary.SaleOrderModel:main',
         ],
     },
     author='Aditya Irri',
@@ -42,16 +42,16 @@ pip install OdooXMLRPCLibrary
 
 **Importing**
 ```python
-from odoo_library.create_contact import CreateContactLibrary
-from odoo_library.saleOrderModel import SaleOrderModel
+from odoo_library.res_partner import ResPartnerModel
+from odoo_library.sale_order import SaleOrderModel
 
 # Create instances of the libraries
-create_contact_instance = CreateContactLibrary()
-create_sale_order_instance = SaleOrderModel()
+res_partner_model_instance = ResPartnerModel()
+sale_order_model_instance = SaleOrderModel()
 
 # Run the Flask apps
-create_contact_instance.run()
-create_sale_order_instance.run()
+res_partner_model_instance.run()
+sale_order_model_instance.run()
 ```
 
 **Code Usage**
@@ -83,7 +83,7 @@ data = {
     "tags": ""                                          # Tags (Comma separated list, Optional)
 }
 
-response = create_contact_instance.create_contact(data)
+response = res_partner_model_instance.create_contact(data)
 return (response)
 
 
@@ -116,7 +116,7 @@ data = {
     "orderLine_discount": []                            # Discounts for each order Line (array of float)
 }
 
-response = create_sale_order_instance.create_sale_order(data)
+response = sale_order_model_instance.create_sale_order(data)
 return (response)
 ```
 
