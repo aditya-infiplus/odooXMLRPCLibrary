@@ -1,12 +1,12 @@
-from odoo_library.create_contact import CreateContactLibrary
-from odoo_library.saleOrderModel import SaleOrderModel
+from odoo_library.res_partner import ResPartnerModel
+from odoo_library.sale_order import SaleOrderModel
 
 # You can also instantiate the libraries if you want to provide pre-configured instances
 
-create_contact_instance = CreateContactLibrary()
-create_sale_order_instance = SaleOrderModel()
+res_partner_model_instance = ResPartnerModel()
+sale_order_model_instance = SaleOrderModel()
 
 # Running the Flask apps by default when the package is imported
 
-create_contact_instance.run()
-create_sale_order_instance.run()
+res_partner_model_instance.run()
+sale_order_model_instance.run()

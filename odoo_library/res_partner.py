@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import xmlrpc.client
 
-class CreateContactLibrary:
+class ResPartnerModel:
     def __init__(self, app=None):
         # Allow passing an external Flask app instance or create a new one
         self.app = app or Flask(__name__)
