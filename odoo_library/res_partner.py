@@ -9,7 +9,7 @@ class ResPartnerModel:
 
     def register_routes(self):
         self.app.route('/create_contact', methods=['POST'])(self.create_contact)
-        self.app.route('/get_sale_order_data', methods=['POST'])(self.get_sale_order_data)
+        self.app.route('/get_contact_data', methods=['POST'])(self.get_contact_data)
 
     def connect_to_odoo(self, data):
         odoo_url = data.get('odoo_server_url')
@@ -142,21 +142,19 @@ class ResPartnerModel:
 
             # Fetch contact data
             search_domain = []
-            if name:
-                search_domain.append(["name", "=", name])
+            if name and name != '':
+                search_domain.append([["name", "=", name]])
             if phone:
                 search_domain.append(['|', ["phone", "=", phone], ["mobile", "=", phone]])
-
-            contact_data = models.execute_kw(database, uid, password, 'res.partner', 'search_read', [search_domain])
-
+            contact_data = models.execute_kw(database, uid, password, 'res.partner', 'search_read', search_domain)
+            
             if not contact_data:
                 if name and not phone:
                     return jsonify({'error': f'Contact with Name: {name} not found'}), 404
                 elif phone and not name:
                     return jsonify({'error': f'Contact with Phone: {phone} not found'}), 404
-
-            return jsonify({'contact_data': contact_data})
-
+            return jsonify({'contact_data' : contact_data})
+        
         except xmlrpc.client.Fault as e:
             return jsonify({'error': f'Error fetching contact data - {str(e)}'}), 500
     def run(self, run_server=False):
