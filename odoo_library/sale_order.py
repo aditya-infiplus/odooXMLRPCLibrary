@@ -10,7 +10,10 @@ class SaleOrderModel:
     def register_routes(self):
         self.app.route('/create_sale_order', methods=['POST'])(self.create_sale_order)
         self.app.route('/get_sale_order_data', methods=['POST'])(self.get_sale_order_data)
+        self.app.route('/confirm_sale_order', methods=['POST'])(self.confirm_sale_order)
 
+
+# =================================================================================================================
     def connect_to_odoo(self, data):
         odoo_url = data.get('odoo_server_url')
         database = data.get('database_name')
@@ -25,7 +28,9 @@ class SaleOrderModel:
         models = xmlrpc.client.ServerProxy(f'{odoo_url}/xmlrpc/2/object')
 
         return models, uid, database, password
+    
 
+# =================================================================================================================
     def create_sale_order(self, data):
         models, uid, database, password = self.connect_to_odoo(data)
 
@@ -58,7 +63,11 @@ class SaleOrderModel:
                                  if 'pricelist' in data else None)} if 'pricelist' in data and data['pricelist'] else {}),
             'order_line': [],
         }
-
+        # Add customisable keys
+        for key, value in data.items():
+            if key.startswith('custom_'):
+                suffix = key[len('custom_'):]
+                saleObj[suffix] = value
         # Add order lines if order line data is provided
         productIdsArray = []
         productVariantIdsArray = []
@@ -110,7 +119,9 @@ class SaleOrderModel:
         createSalesOrder = models.execute_kw(database, uid, password, 'sale.order', 'create', [saleObj])
 
         return jsonify({'sale_order_id': createSalesOrder})
+    
 
+# =================================================================================================================
     def get_sale_order_data(self, data):
         models, uid, database, password = self.connect_to_odoo(data)
 
@@ -130,6 +141,31 @@ class SaleOrderModel:
 
         except xmlrpc.client.Fault:
             return jsonify({'error': 'Error fetching sale order data'}), 500
+        
+
+# =================================================================================================================
+    def confirm_sale_order(self, data):
+        models, uid, database, password = self.connect_to_odoo(data)
+
+        try:
+            order_id = data.get('orderID')
+            if not order_id:
+                return jsonify({'error': 'Missing orderID in the request'}), 400
+            # Confirm the Sale Order
+            confirmRental = models.execute_kw(database, uid, password, 'sale.order', 'action_confirm', [[order_id]])
+            response = {
+                            "code": 200,
+                            "status": "success",
+                            "message": f"Sale Order Confirmed Successfully!",
+                            "order_id": order_id  # Add the order ID here
+                        }
+            # You can process the sale_order_data as needed
+            return jsonify(response)
+
+        except xmlrpc.client.Fault:
+            return jsonify({'error': 'Error fetching sale order data'}), 500
+
+
 
     def run(self, run_server=False):
         # Run the Flask app only if explicitly requested

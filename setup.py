@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='OdooXMLRPCLibrary',
-    version='0.3.7',
+    version='0.3.10',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -18,6 +18,7 @@ setup(
             #--------------- ↓ SaleOrderModel ↓ ------------------------
             'create_sale_order = OdooXMLRPCLibrary.SaleOrderModel:create_sale_order',
             'get_sale_order_data = OdooXMLRPCLibrary.SaleOrderModel:get_sale_order_data',
+            'confirm_sale_order = OdooXMLRPCLibrary.SaleOrderModel:confirm_sale_order',
         ],
     },
     author='Aditya Irri',
@@ -38,6 +39,7 @@ OdooXMLRPCLibrary is a Python library that simplifies interaction with the Odoo 
 *sale.order* Model
 - Add Sales Order in the Odoo platform.
 - Get Sales Order Data by Order ID.
+- Confirm a Sales Order.
 
 *More Modules and Features Coming Soon*
 
@@ -194,6 +196,33 @@ data = {
 
 # Send data to the function
 response = sale_order_model_instance.get_sale_order_data(data)
+
+#Get Response
+return (response)
+
+
+
+
+
+# -------------------------- Example code to Confirm Sales Order Data --------------------------
+
+# Create instances of the libraries
+sale_order_model_instance = SaleOrderModel()
+
+# Run the Instance
+sale_order_model_instance.run()
+
+# Prepare Data
+data = {
+    "odoo_server_url": "https://exampledb.odoo.com/",   # Your Odoo server URL here (with http or https)
+    "database_name": "exampledb",                       # The database name on your Odoo Server 
+    "odoo_username": "DB Username",                     # The username for your Odoo Database
+    "odoo_password": "DB Password",                     # The password for your Odoo Database user
+    "orderID": "",                                      # The sales order ID you want to Confirm Order
+}
+
+# Send data to the function
+response = sale_order_model_instance.confirm_sale_order(data)
 
 #Get Response
 return (response)
