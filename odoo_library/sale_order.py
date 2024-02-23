@@ -129,10 +129,17 @@ class SaleOrderModel:
             order_id = data.get('orderID')
             if not order_id:
                 return jsonify({'error': 'Missing orderID in the request'}), 400
-
-            # Fetch sales order data
-            sale_order_data = models.execute_kw(database, uid, password, 'sale.order', 'search_read', [[["name", "=", order_id]]])
-
+    
+            if isinstance(order_id, str):
+                # If orderID is a string, perform a query using the name field
+                sale_order_data = models.execute_kw(database, uid, password, 'sale.order', 'search_read', [[["name", "=", order_id]]])
+            elif isinstance(order_id, int):
+                # If orderID is an integer, perform a query using the ID field
+                sale_order_data = models.execute_kw(database, uid, password, 'sale.order', 'search_read', [[["id", "=", order_id]]])
+            else:
+                # Handle other types of orderID
+                return jsonify({'error': 'Invalid orderID type. It must be a string or an integer'}), 400
+    
             if not sale_order_data:
                 return jsonify({'error': f'Sale order with ID {order_id} not found'}), 404
 
