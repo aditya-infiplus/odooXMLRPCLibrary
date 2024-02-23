@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='OdooXMLRPCLibrary',
-    version='0.3.10',
+    version='0.3.12',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -191,7 +191,7 @@ data = {
     "database_name": "exampledb",                       # The database name on your Odoo Server 
     "odoo_username": "DB Username",                     # The username for your Odoo Database
     "odoo_password": "DB Password",                     # The password for your Odoo Database user
-    "orderID": "",                                      # The sales order ID you want to retrieve data for
+    "orderID": "",                                      # The sales order ID (String) / Odoo Database ID (Int) you want to retrieve data for
 }
 
 # Send data to the function
